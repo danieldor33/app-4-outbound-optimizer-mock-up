@@ -166,7 +166,7 @@ def update_account_last_contact_date(accounts_df, domain, new_date):
 st.set_page_config(layout="wide")
 st.title("🧭 Seller Prioritization Assistant")
 
-@st.cache_data
+
 def load_data_cached():
     return load_sample_data()
 
@@ -195,14 +195,14 @@ if hasattr(selected_rows, "to_dict"):
 
 if selected_rows and len(selected_rows) > 0:
     selected_account = selected_rows[0]
+    selected_domain = selected_account["Parent Company Domain"]
+    st.subheader(f"Contacts for {selected_account['Account Name']}")
+
+    # Filter contacts by selected domain
+    filtered_contacts_df = contacts_df[contacts_df["Domain"] == selected_domain].reset_index(drop=True)
 else:
-    selected_account = accounts_df.iloc[0].to_dict()
-
-selected_domain = selected_account["Parent Company Domain"]
-st.subheader(f"Contacts for {selected_account['Account Name']}")
-
-# Filter contacts by selected domain
-filtered_contacts_df = contacts_df[contacts_df["Domain"] == selected_domain].reset_index(drop=True)
+    st.subheader("All Contacts (No Account Selected)")
+    filtered_contacts_df = contacts_df.reset_index(drop=True)
 
 # Session state init
 if "contact_updates" not in st.session_state:
