@@ -118,7 +118,7 @@ grid_response = AgGrid(
 selected_rows = grid_response["selected_rows"]
 
 # 5. Display Contacts if an Account is Selected
-if selected_rows:
+if selected_rows and len(selected_rows) > 0:
     selected_account = selected_rows[0]
     selected_domain = selected_account["Parent Company Domain"]
 
