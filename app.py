@@ -4,7 +4,7 @@ from datetime import datetime
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 def load_sample_data():
-      accounts = pd.DataFrame([
+    accounts = pd.DataFrame([
         # Original 2 accounts
         {
             "Country": "USA",
