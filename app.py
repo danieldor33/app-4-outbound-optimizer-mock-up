@@ -513,7 +513,7 @@ for idx in filtered_contacts_df.index:
     colored_date = color_date(last_action_date)
     st.markdown(f"🕒 Last Action: {last_action_type} on {colored_date}", unsafe_allow_html=True)
 
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
 
     def action_button(col, label, action_key, update_field, display_field):
         if col.button(label, key=action_key):
@@ -540,6 +540,8 @@ for idx in filtered_contacts_df.index:
     action_button(col3, "✉️ Email", f"email_{idx}", "Last Email Submission Date", "Last Email Submission Date")
     action_button(col4, "📞 Call", f"call_{idx}", "Last Call Date", "Last Call Date")
     action_button(col5, "📅 Meeting", f"meeting_{idx}", "Last Meeting Date", "Last Meeting Date")
+    # New "Add to cadence" button like LinkedIn button
+    action_button(col6, "➕ Add to cadence", f"cadence_{idx}", "Last Add To Cadence Date", "Last Add To Cadence Date")
 
 # Apply updates and rerun
 if st.session_state.get("update_triggered", False):
