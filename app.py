@@ -5,7 +5,6 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 def load_sample_data():
     accounts = pd.DataFrame([
-        # ... (your accounts data unchanged; omitted here for brevity) ...
         {
             "Country": "USA",
             "Account Name": "Acme Inc.",
@@ -23,18 +22,74 @@ def load_sample_data():
             "Industry": "Software",
             "Industry Sub-Type": "B2B SaaS"
         },
-        # Add other accounts similarly as in your code ...
+        {
+            "Country": "UK",
+            "Account Name": "Globex Ltd.",
+            "Parent Company Domain": "globex.com",
+            "Website": "www.globex.com",
+            "Is Previous Churned Account?": True,
+            "Number Of Contacts": 3,
+            "Contacts Activity Score": 72,
+            "Contacts With Trials": 0,
+            "Number Of Past Opps": 1,
+            "Last Contact Event Date": "2025-07-28",
+            "Last Contact Event Description": "Call",
+            "Last Rep Event Date": "2025-07-30",
+            "Last Rep Event Description": "Meeting",
+            "Industry": "Finance",
+            "Industry Sub-Type": "Banking"
+        }
     ])
 
     contacts = pd.DataFrame([
-        # ... (your contacts data unchanged; omitted here for brevity) ...
-        {"First Name": "John", "Last Name": "Doe", "Country": "USA", "Domain": "acme.com", "Email": "john.doe@acme.com", "Phone": "+1 555 123 4567", 
-         "Last Action Date": "2025-08-01", "Last Action Type Event": "Email", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", 
-         "Last Email Submission Date": "2025-08-01", "Last Call Date": "", "Last Meeting Date": ""},
-        # Add other contacts similarly as in your code ...
+        {
+            "First Name": "John",
+            "Last Name": "Doe",
+            "Country": "USA",
+            "Domain": "acme.com",
+            "Email": "john.doe@acme.com",
+            "Phone": "+1 555 123 4567",
+            "Last Action Date": "2025-08-01",
+            "Last Action Type Event": "Email",
+            "Last LinkedIn Connect Submission Date": "",
+            "Last LinkedIn Message Submission Date": "",
+            "Last Email Submission Date": "2025-08-01",
+            "Last Call Date": "",
+            "Last Meeting Date": ""
+        },
+        {
+            "First Name": "Jane",
+            "Last Name": "Smith",
+            "Country": "USA",
+            "Domain": "acme.com",
+            "Email": "jane.smith@acme.com",
+            "Phone": "+1 555 987 6543",
+            "Last Action Date": "",
+            "Last Action Type Event": "",
+            "Last LinkedIn Connect Submission Date": "",
+            "Last LinkedIn Message Submission Date": "",
+            "Last Email Submission Date": "",
+            "Last Call Date": "",
+            "Last Meeting Date": ""
+        },
+        {
+            "First Name": "Alice",
+            "Last Name": "Johnson",
+            "Country": "UK",
+            "Domain": "globex.com",
+            "Email": "alice.johnson@globex.com",
+            "Phone": "+44 20 7946 0958",
+            "Last Action Date": "2025-07-28",
+            "Last Action Type Event": "Call",
+            "Last LinkedIn Connect Submission Date": "",
+            "Last LinkedIn Message Submission Date": "",
+            "Last Email Submission Date": "",
+            "Last Call Date": "2025-07-28",
+            "Last Meeting Date": ""
+        }
     ])
     return accounts, contacts
-    
+
 def update_account_last_contact_date(accounts_df, domain, new_date):
     accounts_df["Last Contact Event Date"] = pd.to_datetime(accounts_df["Last Contact Event Date"])
     idx = accounts_df.index[accounts_df["Parent Company Domain"] == domain]
@@ -47,14 +102,12 @@ def update_account_last_contact_date(accounts_df, domain, new_date):
 st.set_page_config(layout="wide")
 st.title("🧭 Seller Prioritization Assistant")
 
-# Load data once, and cache it so it's not reloaded every rerun
 @st.cache_data
 def load_data_cached():
     return load_sample_data()
 
 accounts_df, contacts_df = load_data_cached()
 
-# Convert Last Contact Event Date to datetime for sorting
 accounts_df["Last Contact Event Date"] = pd.to_datetime(accounts_df["Last Contact Event Date"], errors='coerce')
 accounts_df = accounts_df.sort_values(by="Last Contact Event Date").reset_index(drop=True)
 
@@ -73,8 +126,6 @@ grid_response = AgGrid(
 )
 
 selected_rows = grid_response["selected_rows"]
-
-# Convert selected_rows if needed
 if hasattr(selected_rows, "to_dict"):
     selected_rows = selected_rows.to_dict(orient="records")
 
@@ -84,18 +135,19 @@ else:
     selected_account = accounts_df.iloc[0].to_dict()
 
 selected_domain = selected_account["Parent Company Domain"]
-
 st.subheader(f"Contacts for {selected_account['Account Name']}")
 
 # Filter contacts by selected domain
 filtered_contacts_df = contacts_df[contacts_df["Domain"] == selected_domain].reset_index(drop=True)
 
-# Initialize session state dict to store contact updates (if not exist)
+# Session state init
 if "contact_updates" not in st.session_state:
-    # Store dict: key = contact idx, value = dict of updated fields
     st.session_state.contact_updates = {}
 
-# Function to get displayed contact info, merging base and session state updates
+if "contact_move_to_bottom" not in st.session_state:
+    st.session_state.contact_move_to_bottom = []
+
+# Merge updates with base data
 def get_contact_info(idx, base_df):
     base_row = base_df.iloc[idx].to_dict()
     updates = st.session_state.contact_updates.get(idx, {})
@@ -103,59 +155,56 @@ def get_contact_info(idx, base_df):
     combined.update(updates)
     return combined
 
-# Show contacts with buttons and last event dates under each button
+# Show contacts with buttons and last event dates
 for idx in filtered_contacts_df.index:
     contact = get_contact_info(idx, filtered_contacts_df)
 
     st.markdown(f"### {contact['First Name']} {contact['Last Name']}")
     st.write(f"📍 {contact['Country']} | ✉️ {contact['Email']} | 📞 {contact['Phone']}")
+    st.write(f"🕒 Last Action: {contact.get('Last Action Type Event') or '—'} on {contact.get('Last Action Date') or '—'}")
 
-    # Show the last action type and date on top
-    last_action_type = contact.get("Last Action Type Event") or "No recent action"
-    last_action_date = contact.get("Last Action Date") or "Never"
-    st.write(f"🕒 Last Action: {last_action_type} on {last_action_date}")
-
-    # Create columns for buttons
     col1, col2, col3, col4, col5 = st.columns(5)
-    
-    # Button helper: renders button + last event date below it
+
     def action_button(col, label, action_key, update_field, display_field):
         if col.button(label, key=action_key):
             today = datetime.today().date().isoformat()
-            # Save update in session state
             st.session_state.contact_updates.setdefault(idx, {})
             st.session_state.contact_updates[idx][update_field] = today
-            # Also update last action fields
             st.session_state.contact_updates[idx]["Last Action Date"] = today
             st.session_state.contact_updates[idx]["Last Action Type Event"] = label
-            # Mark update trigger flag to force rerun
             st.session_state.update_triggered = True
-        
-        # Display last event date below the button, or "-" if missing
+
+            # Move contact to bottom
+            if idx not in st.session_state.contact_move_to_bottom:
+                st.session_state.contact_move_to_bottom.append(idx)
+
+        # Show last event date under button
         last_date = st.session_state.contact_updates.get(idx, {}).get(display_field, filtered_contacts_df.at[idx, display_field]) or "-"
         col.markdown(f"<small>Last: {last_date}</small>", unsafe_allow_html=True)
 
-    # Show buttons with last event date below each
     action_button(col1, "📇 LinkedIn Connect", f"connect_{idx}", "Last LinkedIn Connect Submission Date", "Last LinkedIn Connect Submission Date")
     action_button(col2, "💬 LinkedIn Message", f"msg_{idx}", "Last LinkedIn Message Submission Date", "Last LinkedIn Message Submission Date")
     action_button(col3, "✉️ Email", f"email_{idx}", "Last Email Submission Date", "Last Email Submission Date")
     action_button(col4, "📞 Call", f"call_{idx}", "Last Call Date", "Last Call Date")
     action_button(col5, "📅 Meeting", f"meeting_{idx}", "Last Meeting Date", "Last Meeting Date")
 
-# After all buttons are rendered, if update_triggered rerun the app to refresh UI
+# Apply updates and rerun
 if st.session_state.get("update_triggered", False):
-    # Update contacts_df with session_state updates to keep data consistent on rerun
     for idx, updates in st.session_state.contact_updates.items():
         for col, val in updates.items():
             contacts_df.at[idx, col] = val
-
-        # Also update account's last contact event date if needed
         if "Last Action Date" in updates:
             update_account_last_contact_date(accounts_df, selected_domain, pd.to_datetime(updates["Last Action Date"]))
 
-    # Clear the flag
+    # Reorder filtered contacts to move clicked ones to bottom
+    if st.session_state.contact_move_to_bottom:
+        all_indices = list(filtered_contacts_df.index)
+        top = [i for i in all_indices if i not in st.session_state.contact_move_to_bottom]
+        new_order = top + st.session_state.contact_move_to_bottom
+        filtered_contacts_df = filtered_contacts_df.loc[new_order].reset_index(drop=True)
+        st.session_state.contact_move_to_bottom = []
+
     st.session_state.update_triggered = False
-    # Rerun app to reflect changes
     try:
         st.experimental_rerun()
     except Exception:
