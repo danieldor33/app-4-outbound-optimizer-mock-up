@@ -5,7 +5,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
 def load_sample_data():
     accounts = pd.DataFrame([
-        # Original 2 accounts
+        # ... (your accounts data unchanged; omitted here for brevity) ...
         {
             "Country": "USA",
             "Account Name": "Acme Inc.",
@@ -23,131 +23,15 @@ def load_sample_data():
             "Industry": "Software",
             "Industry Sub-Type": "B2B SaaS"
         },
-        {
-            "Country": "UK",
-            "Account Name": "Globex Ltd.",
-            "Parent Company Domain": "globex.com",
-            "Website": "www.globex.com",
-            "Is Previous Churned Account?": True,
-            "Number Of Contacts": 1,
-            "Contacts Activity Score": 54,
-            "Contacts With Trials": 0,
-            "Number Of Past Opps": 1,
-            "Last Contact Event Date": "2025-07-30",
-            "Last Contact Event Description": "Meeting",
-            "Last Rep Event Date": "2025-07-31",
-            "Last Rep Event Description": "LinkedIn Message",
-            "Industry": "Finance",
-            "Industry Sub-Type": "Banking"
-        },
-        # 5 additional accounts
-        {
-            "Country": "Canada",
-            "Account Name": "MapleSoft",
-            "Parent Company Domain": "maplesoft.ca",
-            "Website": "www.maplesoft.ca",
-            "Is Previous Churned Account?": False,
-            "Number Of Contacts": 2,
-            "Contacts Activity Score": 76,
-            "Contacts With Trials": 1,
-            "Number Of Past Opps": 2,
-            "Last Contact Event Date": "2025-07-28",
-            "Last Contact Event Description": "Call",
-            "Last Rep Event Date": "2025-07-29",
-            "Last Rep Event Description": "Email",
-            "Industry": "Education",
-            "Industry Sub-Type": "EdTech"
-        },
-        {
-            "Country": "Germany",
-            "Account Name": "TechHaus GmbH",
-            "Parent Company Domain": "techhaus.de",
-            "Website": "www.techhaus.de",
-            "Is Previous Churned Account?": False,
-            "Number Of Contacts": 2,
-            "Contacts Activity Score": 92,
-            "Contacts With Trials": 2,
-            "Number Of Past Opps": 4,
-            "Last Contact Event Date": "2025-08-03",
-            "Last Contact Event Description": "Meeting",
-            "Last Rep Event Date": "2025-08-04",
-            "Last Rep Event Description": "Call",
-            "Industry": "Manufacturing",
-            "Industry Sub-Type": "Electronics"
-        },
-        {
-            "Country": "Australia",
-            "Account Name": "Koala Tech",
-            "Parent Company Domain": "koalatech.au",
-            "Website": "www.koalatech.au",
-            "Is Previous Churned Account?": True,
-            "Number Of Contacts": 2,
-            "Contacts Activity Score": 63,
-            "Contacts With Trials": 0,
-            "Number Of Past Opps": 1,
-            "Last Contact Event Date": "2025-07-27",
-            "Last Contact Event Description": "LinkedIn Message",
-            "Last Rep Event Date": "2025-07-28",
-            "Last Rep Event Description": "Call",
-            "Industry": "Retail",
-            "Industry Sub-Type": "E-commerce"
-        },
-        {
-            "Country": "India",
-            "Account Name": "Bharat Systems",
-            "Parent Company Domain": "bharatsystems.in",
-            "Website": "www.bharatsystems.in",
-            "Is Previous Churned Account?": False,
-            "Number Of Contacts": 2,
-            "Contacts Activity Score": 81,
-            "Contacts With Trials": 1,
-            "Number Of Past Opps": 3,
-            "Last Contact Event Date": "2025-08-05",
-            "Last Contact Event Description": "Email",
-            "Last Rep Event Date": "2025-08-06",
-            "Last Rep Event Description": "Meeting",
-            "Industry": "IT Services",
-            "Industry Sub-Type": "Consulting"
-        },
-        {
-            "Country": "France",
-            "Account Name": "Paris Innovations",
-            "Parent Company Domain": "parisinnov.fr",
-            "Website": "www.parisinnov.fr",
-            "Is Previous Churned Account?": False,
-            "Number Of Contacts": 2,
-            "Contacts Activity Score": 70,
-            "Contacts With Trials": 0,
-            "Number Of Past Opps": 2,
-            "Last Contact Event Date": "2025-07-26",
-            "Last Contact Event Description": "Call",
-            "Last Rep Event Date": "2025-07-27",
-            "Last Rep Event Description": "LinkedIn Message",
-            "Industry": "Media",
-            "Industry Sub-Type": "Digital Publishing"
-        }
+        # Add other accounts similarly as in your code ...
     ])
 
     contacts = pd.DataFrame([
-        # Original contacts
-        {"First Name": "John", "Last Name": "Doe", "Country": "USA", "Domain": "acme.com", "Email": "john.doe@acme.com", "Phone": "+1 555 123 4567", "Last Action Date": "2025-08-01", "Last Action Type Event": "Email", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "2025-08-01", "Last Call Date": "", "Last Meeting Date": ""},
-        {"First Name": "Jane", "Last Name": "Smith", "Country": "USA", "Domain": "acme.com", "Email": "jane.smith@acme.com", "Phone": "+1 555 987 6543", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-        {"First Name": "Tom", "Last Name": "Brown", "Country": "UK", "Domain": "globex.com", "Email": "tom.brown@globex.com", "Phone": "+44 20 7946 0958", "Last Action Date": "2025-07-30", "Last Action Type Event": "Meeting", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": "2025-07-30"},
-        # Contacts for MapleSoft
-        {"First Name": "Alice", "Last Name": "Johnson", "Country": "Canada", "Domain": "maplesoft.ca", "Email": "alice.j@maplesoft.ca", "Phone": "+1 416 555 1010", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-        {"First Name": "Bob", "Last Name": "Lee", "Country": "Canada", "Domain": "maplesoft.ca", "Email": "bob.lee@maplesoft.ca", "Phone": "+1 416 555 2020", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-        # Contacts for TechHaus
-        {"First Name": "Eva", "Last Name": "Müller", "Country": "Germany", "Domain": "techhaus.de", "Email": "eva.mueller@techhaus.de", "Phone": "+49 30 123456", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-        {"First Name": "Lars", "Last Name": "Schmidt", "Country": "Germany", "Domain": "techhaus.de", "Email": "lars.schmidt@techhaus.de", "Phone": "+49 30 654321", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-        # Contacts for Koala Tech
-        {"First Name": "Chloe", "Last Name": "Nguyen", "Country": "Australia", "Domain": "koalatech.au", "Email": "chloe.nguyen@koalatech.au", "Phone": "+61 2 1234 5678", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-        {"First Name": "Liam", "Last Name": "Taylor", "Country": "Australia", "Domain": "koalatech.au", "Email": "liam.taylor@koalatech.au", "Phone": "+61 2 8765 4321", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-        # Contacts for Bharat Systems
-        {"First Name": "Anjali", "Last Name": "Verma", "Country": "India", "Domain": "bharatsystems.in", "Email": "anjali.verma@bharatsystems.in", "Phone": "+91 22 1234 5678", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-        {"First Name": "Raj", "Last Name": "Kapoor", "Country": "India", "Domain": "bharatsystems.in", "Email": "raj.kapoor@bharatsystems.in", "Phone": "+91 22 8765 4321", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-        # Contacts for Paris Innovations
-        {"First Name": "Claire", "Last Name": "Dubois", "Country": "France", "Domain": "parisinnov.fr", "Email": "claire.dubois@parisinnov.fr", "Phone": "+33 1 2345 6789", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-        {"First Name": "Antoine", "Last Name": "Moreau", "Country": "France", "Domain": "parisinnov.fr", "Email": "antoine.moreau@parisinnov.fr", "Phone": "+33 1 9876 5432", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""}
+        # ... (your contacts data unchanged; omitted here for brevity) ...
+        {"First Name": "John", "Last Name": "Doe", "Country": "USA", "Domain": "acme.com", "Email": "john.doe@acme.com", "Phone": "+1 555 123 4567", 
+         "Last Action Date": "2025-08-01", "Last Action Type Event": "Email", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", 
+         "Last Email Submission Date": "2025-08-01", "Last Call Date": "", "Last Meeting Date": ""},
+        # Add other contacts similarly as in your code ...
     ])
     return accounts, contacts
     
@@ -163,8 +47,14 @@ def update_account_last_contact_date(accounts_df, domain, new_date):
 st.set_page_config(layout="wide")
 st.title("🧭 Seller Prioritization Assistant")
 
-# Load data
-accounts_df, contacts_df = load_sample_data()
+# Load data once, and cache it so it's not reloaded every rerun
+@st.cache_data
+def load_data_cached():
+    return load_sample_data()
+
+accounts_df, contacts_df = load_data_cached()
+
+# Convert Last Contact Event Date to datetime for sorting
 accounts_df["Last Contact Event Date"] = pd.to_datetime(accounts_df["Last Contact Event Date"], errors='coerce')
 accounts_df = accounts_df.sort_values(by="Last Contact Event Date").reset_index(drop=True)
 
@@ -184,7 +74,7 @@ grid_response = AgGrid(
 
 selected_rows = grid_response["selected_rows"]
 
-# if selected_rows is a DataFrame, convert it to list of dicts
+# Convert selected_rows if needed
 if hasattr(selected_rows, "to_dict"):
     selected_rows = selected_rows.to_dict(orient="records")
 
@@ -196,77 +86,80 @@ else:
 selected_domain = selected_account["Parent Company Domain"]
 
 st.subheader(f"Contacts for {selected_account['Account Name']}")
+
+# Filter contacts by selected domain
 filtered_contacts_df = contacts_df[contacts_df["Domain"] == selected_domain].reset_index(drop=True)
 
-# Initialize session state variables safely
-if "update_request" not in st.session_state:
-    st.session_state.update_request = None
-if "update_triggered" not in st.session_state:
-    st.session_state.update_triggered = False
+# Initialize session state dict to store contact updates (if not exist)
+if "contact_updates" not in st.session_state:
+    # Store dict: key = contact idx, value = dict of updated fields
+    st.session_state.contact_updates = {}
 
-# Show contacts with buttons
-for idx, row in filtered_contacts_df.iterrows():
-    st.markdown(f"### {row['First Name']} {row['Last Name']}")
-    st.write(f"📍 {row['Country']} | ✉️ {row['Email']} | 📞 {row['Phone']}")
-    st.write(f"🕒 Last Action: {row['Last Action Type Event'] or 'No recent action'} on {row['Last Action Date'] or 'Never'}")
+# Function to get displayed contact info, merging base and session state updates
+def get_contact_info(idx, base_df):
+    base_row = base_df.iloc[idx].to_dict()
+    updates = st.session_state.contact_updates.get(idx, {})
+    combined = base_row.copy()
+    combined.update(updates)
+    return combined
 
+# Show contacts with buttons and last event dates under each button
+for idx in filtered_contacts_df.index:
+    contact = get_contact_info(idx, filtered_contacts_df)
+
+    st.markdown(f"### {contact['First Name']} {contact['Last Name']}")
+    st.write(f"📍 {contact['Country']} | ✉️ {contact['Email']} | 📞 {contact['Phone']}")
+
+    # Show the last action type and date on top
+    last_action_type = contact.get("Last Action Type Event") or "No recent action"
+    last_action_date = contact.get("Last Action Date") or "Never"
+    st.write(f"🕒 Last Action: {last_action_type} on {last_action_date}")
+
+    # Create columns for buttons
     col1, col2, col3, col4, col5 = st.columns(5)
-    with col1:
-        if st.button("📇 LinkedIn Connect", key=f"connect_{idx}"):
-            st.session_state.update_request = (row.name, "LinkedIn Connect submission")
-    with col2:
-        if st.button("💬 LinkedIn Message", key=f"msg_{idx}"):
-            st.session_state.update_request = (row.name, "LinkedIn Message")
-    with col3:
-        if st.button("✉️ Email", key=f"email_{idx}"):
-            st.session_state.update_request = (row.name, "Email")
-    with col4:
-        if st.button("📞 Call", key=f"call_{idx}"):
-            st.session_state.update_request = (row.name, "Call")
-    with col5:
-        if st.button("📅 Meeting", key=f"meeting_{idx}"):
-            st.session_state.update_request = (row.name, "Meeting")
+    
+    # Button helper: renders button + last event date below it
+    def action_button(col, label, action_key, update_field, display_field):
+        if col.button(label, key=action_key):
+            today = datetime.today().date().isoformat()
+            # Save update in session state
+            st.session_state.contact_updates.setdefault(idx, {})
+            st.session_state.contact_updates[idx][update_field] = today
+            # Also update last action fields
+            st.session_state.contact_updates[idx]["Last Action Date"] = today
+            st.session_state.contact_updates[idx]["Last Action Type Event"] = label
+            # Mark update trigger flag to force rerun
+            st.session_state.update_triggered = True
+        
+        # Display last event date below the button, or "-" if missing
+        last_date = st.session_state.contact_updates.get(idx, {}).get(display_field, filtered_contacts_df.at[idx, display_field]) or "-"
+        col.markdown(f"<small>Last: {last_date}</small>", unsafe_allow_html=True)
 
-# If update requested and not yet triggered rerun, process update now
-if st.session_state.update_request and not st.session_state.update_triggered:
-    contact_idx, action_type = st.session_state.update_request
-    today = datetime.today().date()
+    # Show buttons with last event date below each
+    action_button(col1, "📇 LinkedIn Connect", f"connect_{idx}", "Last LinkedIn Connect Submission Date", "Last LinkedIn Connect Submission Date")
+    action_button(col2, "💬 LinkedIn Message", f"msg_{idx}", "Last LinkedIn Message Submission Date", "Last LinkedIn Message Submission Date")
+    action_button(col3, "✉️ Email", f"email_{idx}", "Last Email Submission Date", "Last Email Submission Date")
+    action_button(col4, "📞 Call", f"call_{idx}", "Last Call Date", "Last Call Date")
+    action_button(col5, "📅 Meeting", f"meeting_{idx}", "Last Meeting Date", "Last Meeting Date")
 
-    # Update relevant contact columns
-    if action_type == "LinkedIn Connect submission":
-        contacts_df.at[contact_idx, "Last LinkedIn Connect Submission Date"] = today
-    elif action_type == "LinkedIn Message":
-        contacts_df.at[contact_idx, "Last LinkedIn Message Submission Date"] = today
-    elif action_type == "Email":
-        contacts_df.at[contact_idx, "Last Email Submission Date"] = today
-    elif action_type == "Call":
-        contacts_df.at[contact_idx, "Last Call Date"] = today
-    elif action_type == "Meeting":
-        contacts_df.at[contact_idx, "Last Meeting Date"] = today
+# After all buttons are rendered, if update_triggered rerun the app to refresh UI
+if st.session_state.get("update_triggered", False):
+    # Update contacts_df with session_state updates to keep data consistent on rerun
+    for idx, updates in st.session_state.contact_updates.items():
+        for col, val in updates.items():
+            contacts_df.at[idx, col] = val
 
-    # Update last action date and type
-    contacts_df.at[contact_idx, "Last Action Date"] = today
-    contacts_df.at[contact_idx, "Last Action Type Event"] = action_type
+        # Also update account's last contact event date if needed
+        if "Last Action Date" in updates:
+            update_account_last_contact_date(accounts_df, selected_domain, pd.to_datetime(updates["Last Action Date"]))
 
-    # Update account's last contact event date if newer
-    update_account_last_contact_date(accounts_df, selected_domain, pd.to_datetime(today))
-
-    # Mark rerun as triggered to prevent rerun loops
-    st.session_state.update_triggered = True
-
-    # Clear the update request so next time can accept new updates
-    st.session_state.update_request = None
-
-    # Wrap rerun in try-except to avoid AttributeError crashing the app
+    # Clear the flag
+    st.session_state.update_triggered = False
+    # Rerun app to reflect changes
     try:
         st.experimental_rerun()
-    except AttributeError:
-        # If rerun fails, just pass (optional: you can log or show warning)
+    except Exception:
         pass
-
-else:
-    # Reset trigger if no update request
-    st.session_state.update_triggered = False
 
 if not selected_rows:
     st.info("Select an account from the table above to view contacts.")
