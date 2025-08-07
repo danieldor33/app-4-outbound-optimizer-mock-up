@@ -473,8 +473,11 @@ for idx in filtered_contacts_df.index:
     contact = get_contact_info(idx, filtered_contacts_df)
 
     st.markdown(f"### {contact['First Name']} {contact['Last Name']}")
-    st.write(f"📍 {contact['Country']} | ✉️ {contact['Email']} | 📞 {contact['Phone']}")
-
+    st.write(
+    f"📍 {contact['Country']} | ✉️ {contact['Email']} | 📞 {contact['Phone']} | "
+    f"🏷️ {contact.get('Title', '—')} | 🏢 {contact.get('Department', '—')} | "
+    f"💡 Use Case: {contact.get('Use Case', '—')}"
+    )
     last_action_type = contact.get('Last Action Type Event') or '—'
     last_action_date = contact.get('Last Action Date') or '—'
     colored_date = color_date(last_action_date)
