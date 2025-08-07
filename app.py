@@ -223,8 +223,28 @@ for idx in filtered_contacts_df.index:
 
     st.markdown(f"### {contact['First Name']} {contact['Last Name']}")
     st.write(f"📍 {contact['Country']} | ✉️ {contact['Email']} | 📞 {contact['Phone']}")
-    st.write(f"🕒 Last Action: {contact.get('Last Action Type Event') or '—'} on {contact.get('Last Action Date') or '—'}")
+    from datetime import datetime
 
+def color_date(date_str):
+    if not date_str or date_str == '—':
+        return "—"
+    try:
+        date_obj = pd.to_datetime(date_str).date()
+    except Exception:
+        return date_str
+    days_passed = (datetime.today().date() - date_obj).days
+    if days_passed <= 2:
+        color = "green"
+    elif 3 <= days_passed <= 7:
+        color = "orange"
+    else:
+        color = "red"
+    return f'<span style="color:{color}; font-weight:bold;">{date_str}</span>'
+
+    last_action_type = contact.get('Last Action Type Event') or '—'
+    last_action_date = contact.get('Last Action Date') or '—'
+    colored_date = color_date(last_action_date)
+    st.markdown(f"🕒 Last Action: {last_action_type} on {colored_date}", unsafe_allow_html=True)
     col1, col2, col3, col4, col5 = st.columns(5)
 
     def action_button(col, label, action_key, update_field, display_field):
