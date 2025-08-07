@@ -192,47 +192,58 @@ if not selected_rows.empty:
 
     filtered_contacts_df = contacts_df[contacts_df["Domain"] == selected_domain].reset_index(drop=True)
 
-    for idx, row in filtered_contacts_df.iterrows():
-        st.markdown(f"### {row['First Name']} {row['Last Name']}")
-        st.write(f"📍 {row['Country']} | ✉️ {row['Email']} | 📞 {row['Phone']}")
-        st.write(f"🕒 Last Action: {row['Last Action Type Event']} on {row['Last Action Date']}")
+  for idx, row in filtered_contacts_df.iterrows():
+    st.markdown(f"### {row['First Name']} {row['Last Name']}")
+    st.write(f"📍 {row['Country']} | ✉️ {row['Email']} | 📞 {row['Phone']}")
+    st.write(f"🕒 Last Action: {row['Last Action Type Event']} on {row['Last Action Date']}")
 
-        col1, col2, col3, col4, col5 = st.columns(5)
-        today = datetime.today().date()
+    col1, col2, col3, col4, col5 = st.columns(5)
+    today = datetime.today().date()
 
-        with col1:
-            if st.button("📇 LinkedIn Connect", key=f"connect_{idx}"):
-                contacts_df.at[row.name, "Last LinkedIn Connect Submission Date"] = today
-                contacts_df.at[row.name, "Last Action Date"] = today
-                contacts_df.at[row.name, "Last Action Type Event"] = "LinkedIn Connect submission"
-                st.success("LinkedIn Connect recorded.")
+    with col1:
+        if st.button("📇 LinkedIn Connect", key=f"connect_{idx}"):
+            contacts_df.at[row.name, "Last LinkedIn Connect Submission Date"] = today
+            contacts_df.at[row.name, "Last Action Date"] = today
+            contacts_df.at[row.name, "Last Action Type Event"] = "LinkedIn Connect submission"
+            st.success("LinkedIn Connect recorded.")
+        # Show last LinkedIn Connect date below button
+        last_date = contacts_df.at[row.name, "Last LinkedIn Connect Submission Date"]
+        st.caption(f"Last: {last_date if last_date else 'Never'}")
 
-        with col2:
-            if st.button("💬 LinkedIn Message", key=f"msg_{idx}"):
-                contacts_df.at[row.name, "Last LinkedIn Message Submission Date"] = today
-                contacts_df.at[row.name, "Last Action Date"] = today
-                contacts_df.at[row.name, "Last Action Type Event"] = "LinkedIn Message"
-                st.success("LinkedIn Message recorded.")
+    with col2:
+        if st.button("💬 LinkedIn Message", key=f"msg_{idx}"):
+            contacts_df.at[row.name, "Last LinkedIn Message Submission Date"] = today
+            contacts_df.at[row.name, "Last Action Date"] = today
+            contacts_df.at[row.name, "Last Action Type Event"] = "LinkedIn Message"
+            st.success("LinkedIn Message recorded.")
+        last_date = contacts_df.at[row.name, "Last LinkedIn Message Submission Date"]
+        st.caption(f"Last: {last_date if last_date else 'Never'}")
 
-        with col3:
-            if st.button("✉️ Email", key=f"email_{idx}"):
-                contacts_df.at[row.name, "Last Email Submission Date"] = today
-                contacts_df.at[row.name, "Last Action Date"] = today
-                contacts_df.at[row.name, "Last Action Type Event"] = "Email"
-                st.success("Email recorded.")
+    with col3:
+        if st.button("✉️ Email", key=f"email_{idx}"):
+            contacts_df.at[row.name, "Last Email Submission Date"] = today
+            contacts_df.at[row.name, "Last Action Date"] = today
+            contacts_df.at[row.name, "Last Action Type Event"] = "Email"
+            st.success("Email recorded.")
+        last_date = contacts_df.at[row.name, "Last Email Submission Date"]
+        st.caption(f"Last: {last_date if last_date else 'Never'}")
 
-        with col4:
-            if st.button("📞 Call", key=f"call_{idx}"):
-                contacts_df.at[row.name, "Last Call Date"] = today
-                contacts_df.at[row.name, "Last Action Date"] = today
-                contacts_df.at[row.name, "Last Action Type Event"] = "Call"
-                st.success("Call recorded.")
+    with col4:
+        if st.button("📞 Call", key=f"call_{idx}"):
+            contacts_df.at[row.name, "Last Call Date"] = today
+            contacts_df.at[row.name, "Last Action Date"] = today
+            contacts_df.at[row.name, "Last Action Type Event"] = "Call"
+            st.success("Call recorded.")
+        last_date = contacts_df.at[row.name, "Last Call Date"]
+        st.caption(f"Last: {last_date if last_date else 'Never'}")
 
-        with col5:
-            if st.button("📅 Meeting", key=f"meeting_{idx}"):
-                contacts_df.at[row.name, "Last Meeting Date"] = today
-                contacts_df.at[row.name, "Last Action Date"] = today
-                contacts_df.at[row.name, "Last Action Type Event"] = "Meeting"
-                st.success("Meeting recorded.")
+    with col5:
+        if st.button("📅 Meeting", key=f"meeting_{idx}"):
+            contacts_df.at[row.name, "Last Meeting Date"] = today
+            contacts_df.at[row.name, "Last Action Date"] = today
+            contacts_df.at[row.name, "Last Action Type Event"] = "Meeting"
+            st.success("Meeting recorded.")
+        last_date = contacts_df.at[row.name, "Last Meeting Date"]
+        st.caption(f"Last: {last_date if last_date else 'Never'}")
 else:
     st.info("Select a row from the accounts table above to view and act on contacts.")
