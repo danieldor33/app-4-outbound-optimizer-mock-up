@@ -145,42 +145,39 @@ def load_sample_data():
     return accounts, contacts
 
 
-# --- 2. Function to update account's last contact date ---
+# --- 2. Update account last contact event date ---
 def update_account_last_contact_date(accounts_df, domain, new_date):
     """
-    Update the 'Last Contact Event Date' in accounts_df for the account matching the given domain
-    if the new_date is more recent than the existing date.
+    Update the 'Last Contact Event Date' in accounts_df for the given domain,
+    only if new_date is more recent than existing date.
     """
-    # Ensure the date column is datetime type
     if not pd.api.types.is_datetime64_any_dtype(accounts_df["Last Contact Event Date"]):
         accounts_df["Last Contact Event Date"] = pd.to_datetime(accounts_df["Last Contact Event Date"], errors='coerce')
 
-    # Find index for the account with the matching domain
     idx = accounts_df.index[accounts_df["Parent Company Domain"] == domain]
     if len(idx) > 0:
         idx = idx[0]
         old_date = accounts_df.at[idx, "Last Contact Event Date"]
-        # Update only if new_date is more recent or if old_date is missing
         if pd.isna(old_date) or new_date > old_date:
             accounts_df.at[idx, "Last Contact Event Date"] = new_date
     return accounts_df
 
 
-# --- 3. Streamlit App Setup ---
+# --- 3. Streamlit page setup ---
 st.set_page_config(layout="wide")
 st.title("🧭 Seller Prioritization Assistant")
 
-# --- 4. Load Data ---
+# --- 4. Load data ---
 accounts_df, contacts_df = load_sample_data()
 
-# Convert date columns to datetime for sorting and consistency
+# Convert date columns to datetime
 accounts_df["Last Contact Event Date"] = pd.to_datetime(accounts_df["Last Contact Event Date"], errors='coerce')
 contacts_df["Last Action Date"] = pd.to_datetime(contacts_df["Last Action Date"], errors='coerce')
 
-# --- 5. Sort accounts by oldest last contact event date ---
+# --- 5. Sort accounts by oldest last contact date ---
 accounts_df = accounts_df.sort_values("Last Contact Event Date", ascending=True).reset_index(drop=True)
 
-# --- 6. Display Accounts Table with AgGrid ---
+# --- 6. Display accounts with AgGrid ---
 st.subheader("Accounts Overview")
 gb = GridOptionsBuilder.from_dataframe(accounts_df)
 gb.configure_selection("single", use_checkbox=True)
@@ -196,8 +193,6 @@ grid_response = AgGrid(
 )
 
 selected_rows = grid_response["selected_rows"]
-
-# Handle different types of selected_rows (dict or list)
 if hasattr(selected_rows, "to_dict"):
     selected_rows = selected_rows.to_dict(orient="records")
 
@@ -208,37 +203,38 @@ else:
 
 selected_domain = selected_account["Parent Company Domain"]
 
-# --- 7. Display Contacts for Selected Account ---
+# --- 7. Initialize rerun flag in session_state ---
+if "needs_rerun" not in st.session_state:
+    st.session_state.needs_rerun = False
+
+# --- 8. Show contacts for selected account ---
 st.subheader(f"Contacts for {selected_account['Account Name']}")
 
 filtered_contacts_df = contacts_df[contacts_df["Domain"] == selected_domain].reset_index(drop=True)
 
-# Get today's date once to avoid multiple calls
 today = datetime.today().date()
 
 for idx, row in filtered_contacts_df.iterrows():
     st.markdown(f"### {row['First Name']} {row['Last Name']}")
     st.write(f"📍 {row['Country']} | ✉️ {row['Email']} | 📞 {row['Phone']}")
+
     last_action_date_str = row['Last Action Date'].strftime('%Y-%m-%d') if pd.notna(row['Last Action Date']) else "Never"
     st.write(f"🕒 Last Action: {row['Last Action Type Event']} on {last_action_date_str}")
 
     col1, col2, col3, col4, col5 = st.columns(5)
 
-    # LinkedIn Connect Button
     with col1:
         if st.button("📇 LinkedIn Connect", key=f"connect_{idx}"):
             contacts_df.at[row.name, "Last LinkedIn Connect Submission Date"] = today
             contacts_df.at[row.name, "Last Action Date"] = today
             contacts_df.at[row.name, "Last Action Type Event"] = "LinkedIn Connect submission"
-            # Update account's last contact date
             update_account_last_contact_date(accounts_df, selected_domain, pd.to_datetime(today))
             st.success("LinkedIn Connect recorded.")
-            st.experimental_rerun()
+            st.session_state.needs_rerun = True
         last_date = contacts_df.at[row.name, "Last LinkedIn Connect Submission Date"]
         last_date_str = last_date if last_date else "Never"
         st.caption(f"Last: {last_date_str}")
 
-    # LinkedIn Message Button
     with col2:
         if st.button("💬 LinkedIn Message", key=f"msg_{idx}"):
             contacts_df.at[row.name, "Last LinkedIn Message Submission Date"] = today
@@ -246,12 +242,11 @@ for idx, row in filtered_contacts_df.iterrows():
             contacts_df.at[row.name, "Last Action Type Event"] = "LinkedIn Message"
             update_account_last_contact_date(accounts_df, selected_domain, pd.to_datetime(today))
             st.success("LinkedIn Message recorded.")
-            st.experimental_rerun()
+            st.session_state.needs_rerun = True
         last_date = contacts_df.at[row.name, "Last LinkedIn Message Submission Date"]
         last_date_str = last_date if last_date else "Never"
         st.caption(f"Last: {last_date_str}")
 
-    # Email Button
     with col3:
         if st.button("✉️ Email", key=f"email_{idx}"):
             contacts_df.at[row.name, "Last Email Submission Date"] = today
@@ -259,12 +254,11 @@ for idx, row in filtered_contacts_df.iterrows():
             contacts_df.at[row.name, "Last Action Type Event"] = "Email"
             update_account_last_contact_date(accounts_df, selected_domain, pd.to_datetime(today))
             st.success("Email recorded.")
-            st.experimental_rerun()
+            st.session_state.needs_rerun = True
         last_date = contacts_df.at[row.name, "Last Email Submission Date"]
         last_date_str = last_date if last_date else "Never"
         st.caption(f"Last: {last_date_str}")
 
-    # Call Button
     with col4:
         if st.button("📞 Call", key=f"call_{idx}"):
             contacts_df.at[row.name, "Last Call Date"] = today
@@ -272,12 +266,11 @@ for idx, row in filtered_contacts_df.iterrows():
             contacts_df.at[row.name, "Last Action Type Event"] = "Call"
             update_account_last_contact_date(accounts_df, selected_domain, pd.to_datetime(today))
             st.success("Call recorded.")
-            st.experimental_rerun()
+            st.session_state.needs_rerun = True
         last_date = contacts_df.at[row.name, "Last Call Date"]
         last_date_str = last_date if last_date else "Never"
         st.caption(f"Last: {last_date_str}")
 
-    # Meeting Button
     with col5:
         if st.button("📅 Meeting", key=f"meeting_{idx}"):
             contacts_df.at[row.name, "Last Meeting Date"] = today
@@ -285,10 +278,16 @@ for idx, row in filtered_contacts_df.iterrows():
             contacts_df.at[row.name, "Last Action Type Event"] = "Meeting"
             update_account_last_contact_date(accounts_df, selected_domain, pd.to_datetime(today))
             st.success("Meeting recorded.")
-            st.experimental_rerun()
+            st.session_state.needs_rerun = True
         last_date = contacts_df.at[row.name, "Last Meeting Date"]
         last_date_str = last_date if last_date else "Never"
         st.caption(f"Last: {last_date_str}")
 
+# --- 9. Trigger rerun once if any button was clicked ---
+if st.session_state.needs_rerun:
+    st.session_state.needs_rerun = False  # reset the flag
+    st.experimental_rerun()
+
+# --- 10. If no selection ---
 if not selected_rows:
     st.info("Select a row from the accounts table above to view and act on contacts.")
