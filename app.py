@@ -412,10 +412,16 @@ grid_response = AgGrid(
     fit_columns_on_grid_load=True,
 )
 
-# Reset only the session updates and moved contacts
+if "reset_trigger" not in st.session_state:
+    st.session_state.reset_trigger = False
+
 if st.button("🔄 Reset All Updates"):
     st.session_state.contact_updates = {}
     st.session_state.contact_move_to_bottom = []
+    st.session_state.reset_trigger = True
+
+if st.session_state.reset_trigger:
+    st.session_state.reset_trigger = False
     st.experimental_rerun()
 
 selected_rows = grid_response["selected_rows"]
