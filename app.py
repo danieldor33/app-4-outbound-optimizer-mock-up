@@ -149,7 +149,7 @@ def load_sample_data():
         {"First Name": "Claire", "Last Name": "Dubois", "Country": "France", "Domain": "parisinnov.fr", "Email": "claire.dubois@parisinnov.fr", "Phone": "+33 1 2345 6789", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
         {"First Name": "Antoine", "Last Name": "Moreau", "Country": "France", "Domain": "parisinnov.fr", "Email": "antoine.moreau@parisinnov.fr", "Phone": "+33 1 9876 5432", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""}
     ])
-    return accounts, contacts
+return accounts, contacts
 
 def update_account_last_contact_date(accounts_df, domain, new_date):
     accounts_df["Last Contact Event Date"] = pd.to_datetime(accounts_df["Last Contact Event Date"])
