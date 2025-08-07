@@ -166,12 +166,10 @@ def update_account_last_contact_date(accounts_df, domain, new_date):
 st.set_page_config(layout="wide")
 st.title("🧭 Seller Prioritization Assistant")
 
-
 def load_data_cached():
     return load_sample_data()
 
 accounts_df, contacts_df = load_data_cached()
-
 accounts_df["Last Contact Event Date"] = pd.to_datetime(accounts_df["Last Contact Event Date"], errors='coerce')
 accounts_df = accounts_df.sort_values(by="Last Contact Event Date").reset_index(drop=True)
 
@@ -209,12 +207,12 @@ if "contact_updates" not in st.session_state:
     st.session_state.contact_updates = {}
 
 if "contact_move_to_bottom" not in st.session_state:
-    st.session_state.contact_move_to_bottom = []
+    st.session_state.contact_move_to_bottom = []  # Now stores emails
 
 # Merge updates with base data
 def get_contact_info(idx, base_df):
     base_row = base_df.iloc[idx].to_dict()
-    updates = st.session_state.contact_updates.get(idx, {})
+    updates = st.session_state.contact_updates.get(base_row["Email"], {})
     combined = base_row.copy()
     combined.update(updates)
     return combined
@@ -232,18 +230,23 @@ for idx in filtered_contacts_df.index:
     def action_button(col, label, action_key, update_field, display_field):
         if col.button(label, key=action_key):
             today = datetime.today().date().isoformat()
-            st.session_state.contact_updates.setdefault(idx, {})
-            st.session_state.contact_updates[idx][update_field] = today
-            st.session_state.contact_updates[idx]["Last Action Date"] = today
-            st.session_state.contact_updates[idx]["Last Action Type Event"] = label
+            email = contact["Email"]
+            st.session_state.contact_updates.setdefault(email, {})
+            st.session_state.contact_updates[email][update_field] = today
+            st.session_state.contact_updates[email]["Last Action Date"] = today
+            st.session_state.contact_updates[email]["Last Action Type Event"] = label
             st.session_state.update_triggered = True
 
-            # Move contact to bottom
-            if idx not in st.session_state.contact_move_to_bottom:
-                st.session_state.contact_move_to_bottom.append(idx)
+            # Move contact to bottom by email
+            if email not in st.session_state.contact_move_to_bottom:
+                st.session_state.contact_move_to_bottom.append(email)
 
         # Show last event date under button
-        last_date = st.session_state.contact_updates.get(idx, {}).get(display_field, filtered_contacts_df.at[idx, display_field]) or "-"
+        last_date = (
+            st.session_state.contact_updates.get(contact["Email"], {}).get(display_field)
+            or filtered_contacts_df.at[idx, display_field]
+            or "-"
+        )
         col.markdown(f"<small>Last: {last_date}</small>", unsafe_allow_html=True)
 
     action_button(col1, "📇 LinkedIn Connect", f"connect_{idx}", "Last LinkedIn Connect Submission Date", "Last LinkedIn Connect Submission Date")
@@ -254,18 +257,19 @@ for idx in filtered_contacts_df.index:
 
 # Apply updates and rerun
 if st.session_state.get("update_triggered", False):
-    for idx, updates in st.session_state.contact_updates.items():
-        for col, val in updates.items():
-            contacts_df.at[idx, col] = val
-        if "Last Action Date" in updates:
-            update_account_last_contact_date(accounts_df, selected_domain, pd.to_datetime(updates["Last Action Date"]))
+    for email, updates in st.session_state.contact_updates.items():
+        idxs = contacts_df.index[contacts_df["Email"] == email].tolist()
+        for idx in idxs:
+            for col, val in updates.items():
+                contacts_df.at[idx, col] = val
+            if "Last Action Date" in updates and selected_rows:
+                update_account_last_contact_date(accounts_df, selected_domain, pd.to_datetime(updates["Last Action Date"]))
 
     # Reorder filtered contacts to move clicked ones to bottom
     if st.session_state.contact_move_to_bottom:
-        all_indices = list(filtered_contacts_df.index)
-        top = [i for i in all_indices if i not in st.session_state.contact_move_to_bottom]
-        new_order = top + st.session_state.contact_move_to_bottom
-        filtered_contacts_df = filtered_contacts_df.loc[new_order].reset_index(drop=True)
+        top = filtered_contacts_df[~filtered_contacts_df["Email"].isin(st.session_state.contact_move_to_bottom)]
+        bottom = filtered_contacts_df[filtered_contacts_df["Email"].isin(st.session_state.contact_move_to_bottom)]
+        filtered_contacts_df = pd.concat([top, bottom], ignore_index=True)
         st.session_state.contact_move_to_bottom = []
 
     st.session_state.update_triggered = False
