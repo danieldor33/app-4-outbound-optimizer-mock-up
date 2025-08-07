@@ -3,10 +3,10 @@ import pandas as pd
 from datetime import datetime
 from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode
 
-# 1. Sample Data
+# 1. Sample Data with 7 accounts (including the 5 new ones) and their contacts
 def load_sample_data():
     accounts = pd.DataFrame([
-        # Original accounts
+        # Original 2 accounts
         {
             "Country": "USA",
             "Account Name": "Acme Inc.",
@@ -41,7 +41,7 @@ def load_sample_data():
             "Industry": "Finance",
             "Industry Sub-Type": "Banking"
         },
-        # Additional accounts
+        # 5 additional accounts
         {
             "Country": "Canada",
             "Account Name": "MapleSoft",
@@ -134,23 +134,18 @@ def load_sample_data():
         {"First Name": "John", "Last Name": "Doe", "Country": "USA", "Domain": "acme.com", "Email": "john.doe@acme.com", "Phone": "+1 555 123 4567", "Last Action Date": "2025-08-01", "Last Action Type Event": "Email", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "2025-08-01", "Last Call Date": "", "Last Meeting Date": ""},
         {"First Name": "Jane", "Last Name": "Smith", "Country": "USA", "Domain": "acme.com", "Email": "jane.smith@acme.com", "Phone": "+1 555 987 6543", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
         {"First Name": "Tom", "Last Name": "Brown", "Country": "UK", "Domain": "globex.com", "Email": "tom.brown@globex.com", "Phone": "+44 20 7946 0958", "Last Action Date": "2025-07-30", "Last Action Type Event": "Meeting", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": "2025-07-30"},
-        
         # Contacts for MapleSoft
         {"First Name": "Alice", "Last Name": "Johnson", "Country": "Canada", "Domain": "maplesoft.ca", "Email": "alice.j@maplesoft.ca", "Phone": "+1 416 555 1010", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
         {"First Name": "Bob", "Last Name": "Lee", "Country": "Canada", "Domain": "maplesoft.ca", "Email": "bob.lee@maplesoft.ca", "Phone": "+1 416 555 2020", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-
         # Contacts for TechHaus
         {"First Name": "Eva", "Last Name": "Müller", "Country": "Germany", "Domain": "techhaus.de", "Email": "eva.mueller@techhaus.de", "Phone": "+49 30 123456", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
         {"First Name": "Lars", "Last Name": "Schmidt", "Country": "Germany", "Domain": "techhaus.de", "Email": "lars.schmidt@techhaus.de", "Phone": "+49 30 654321", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-
         # Contacts for Koala Tech
         {"First Name": "Chloe", "Last Name": "Nguyen", "Country": "Australia", "Domain": "koalatech.au", "Email": "chloe.nguyen@koalatech.au", "Phone": "+61 2 1234 5678", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
         {"First Name": "Liam", "Last Name": "Taylor", "Country": "Australia", "Domain": "koalatech.au", "Email": "liam.taylor@koalatech.au", "Phone": "+61 2 8765 4321", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-
         # Contacts for Bharat Systems
         {"First Name": "Anjali", "Last Name": "Verma", "Country": "India", "Domain": "bharatsystems.in", "Email": "anjali.verma@bharatsystems.in", "Phone": "+91 22 1234 5678", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
         {"First Name": "Raj", "Last Name": "Kapoor", "Country": "India", "Domain": "bharatsystems.in", "Email": "raj.kapoor@bharatsystems.in", "Phone": "+91 22 8765 4321", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
-
         # Contacts for Paris Innovations
         {"First Name": "Claire", "Last Name": "Dubois", "Country": "France", "Domain": "parisinnov.fr", "Email": "claire.dubois@parisinnov.fr", "Phone": "+33 1 2345 6789", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""},
         {"First Name": "Antoine", "Last Name": "Moreau", "Country": "France", "Domain": "parisinnov.fr", "Email": "antoine.moreau@parisinnov.fr", "Phone": "+33 1 9876 5432", "Last Action Date": "", "Last Action Type Event": "", "Last LinkedIn Connect Submission Date": "", "Last LinkedIn Message Submission Date": "", "Last Email Submission Date": "", "Last Call Date": "", "Last Meeting Date": ""}
@@ -183,16 +178,19 @@ grid_response = AgGrid(
 
 selected_rows = grid_response["selected_rows"]
 
-# 5. Display Contacts if an Account is Selected
-if not selected_rows.empty:
-    selected_account = selected_rows.iloc[0]
-    selected_domain = selected_account["Parent Company Domain"]
+# 5. Default select first account if none selected
+if not selected_rows:
+    selected_account = accounts_df.iloc[0].to_dict()
+else:
+    selected_account = selected_rows[0]
 
-    st.subheader(f"Contacts for {selected_account['Account Name']}")
+selected_domain = selected_account["Parent Company Domain"]
 
-    filtered_contacts_df = contacts_df[contacts_df["Domain"] == selected_domain].reset_index(drop=True)
+st.subheader(f"Contacts for {selected_account['Account Name']}")
 
-  for idx, row in filtered_contacts_df.iterrows():
+filtered_contacts_df = contacts_df[contacts_df["Domain"] == selected_domain].reset_index(drop=True)
+
+for idx, row in filtered_contacts_df.iterrows():
     st.markdown(f"### {row['First Name']} {row['Last Name']}")
     st.write(f"📍 {row['Country']} | ✉️ {row['Email']} | 📞 {row['Phone']}")
     st.write(f"🕒 Last Action: {row['Last Action Type Event']} on {row['Last Action Date']}")
@@ -206,7 +204,6 @@ if not selected_rows.empty:
             contacts_df.at[row.name, "Last Action Date"] = today
             contacts_df.at[row.name, "Last Action Type Event"] = "LinkedIn Connect submission"
             st.success("LinkedIn Connect recorded.")
-        # Show last LinkedIn Connect date below button
         last_date = contacts_df.at[row.name, "Last LinkedIn Connect Submission Date"]
         st.caption(f"Last: {last_date if last_date else 'Never'}")
 
@@ -245,5 +242,7 @@ if not selected_rows.empty:
             st.success("Meeting recorded.")
         last_date = contacts_df.at[row.name, "Last Meeting Date"]
         st.caption(f"Last: {last_date if last_date else 'Never'}")
+
 else:
-    st.info("Select a row from the accounts table above to view and act on contacts.")
+    if not selected_rows:
+        st.info("Select a row from the accounts table above to view and act on contacts.")
