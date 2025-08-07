@@ -196,15 +196,20 @@ grid_response = AgGrid(
     fit_columns_on_grid_load=True,
 )
 
-selected_rows = grid_response.get("selected_rows", [])
+selected_rows = grid_response["selected_rows"]
 
-# If no selection, default to first account
-if selected_rows:
+# if selected_rows is a DataFrame, convert it to list of dicts
+if hasattr(selected_rows, "to_dict"):
+    selected_rows = selected_rows.to_dict(orient="records")
+
+if selected_rows and len(selected_rows) > 0:
     selected_account = selected_rows[0]
 else:
     selected_account = accounts_df.iloc[0].to_dict()
 
 selected_domain = selected_account["Parent Company Domain"]
+
+
 
 st.subheader(f"Contacts for {selected_account['Account Name']}")
 
