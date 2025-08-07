@@ -176,10 +176,12 @@ grid_response = AgGrid(
     fit_columns_on_grid_load=True,
 )
 
-selected_rows = grid_response["selected_rows"]
-
 # 5. Default select first account if none selected
 selected_rows = grid_response["selected_rows"]
+
+# if selected_rows is a DataFrame, convert it to list of dicts
+if hasattr(selected_rows, "to_dict"):
+    selected_rows = selected_rows.to_dict(orient="records")
 
 if selected_rows and len(selected_rows) > 0:
     selected_account = selected_rows[0]
