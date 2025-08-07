@@ -376,6 +376,9 @@ def load_sample_data():
 
 accounts_df, contacts_df = load_sample_data()
 
+ACCOUNT_BG_COLOR = "#e6f2ff"  # light blue for account section
+CONTACT_BG_COLOR = "#f9f9f9"  # light grey for contacts section
+
 def update_account_last_contact_date(accounts_df, domain, new_date):
     accounts_df["Last Contact Event Date"] = pd.to_datetime(accounts_df["Last Contact Event Date"])
     idx = accounts_df.index[accounts_df["Parent Company Domain"] == domain]
@@ -448,7 +451,12 @@ def get_contact_info(idx, base_df):
 if selected_rows and len(selected_rows) > 0:
     selected_account = selected_rows[0]
     selected_domain = selected_account["Parent Company Domain"]
-    st.subheader(f"Contacts for {selected_account['Account Name']}")
+    # Account section with background color
+    st.markdown(
+        f'<div style="background-color: {ACCOUNT_BG_COLOR}; padding: 15px; border-radius: 5px;">'
+        f'<h3>Contacts for {selected_account["Account Name"]}</h3></div>', 
+        unsafe_allow_html=True,
+    )
 
     filtered_contacts_df = contacts_df[contacts_df["Domain"] == selected_domain].reset_index(drop=True)
 
@@ -459,7 +467,11 @@ if selected_rows and len(selected_rows) > 0:
         bottom_df = filtered_contacts_df[filtered_contacts_df["Email"].isin(bottom_emails)]
         filtered_contacts_df = pd.concat([top_df, bottom_df], ignore_index=True)
 else:
-    st.subheader("All Contacts (No Account Selected)")
+    st.markdown(
+    f'<div style="background-color: {ACCOUNT_BG_COLOR}; padding: 15px; border-radius: 5px;">'
+    '<h3>All Contacts (No Account Selected)</h3></div>', 
+    unsafe_allow_html=True,
+    )
     filtered_contacts_df = contacts_df.reset_index(drop=True)
 
     # Also reorder for no account selected
@@ -472,11 +484,16 @@ else:
 for idx in filtered_contacts_df.index:
     contact = get_contact_info(idx, filtered_contacts_df)
 
-    st.markdown(f"### {contact['First Name']} {contact['Last Name']}")
-    st.write(
-    f"📍 {contact['Country']} | ✉️ {contact['Email']} | 📞 {contact['Phone']} | "
-    f"🏷️ {contact.get('Title', '—')} | 🏢 {contact.get('Department', '—')} | "
-    f"💡 Use Case: {contact.get('Use Case', '—')}"
+    contact_number = idx + 1
+
+    st.markdown(
+        f'<div style="background-color: {CONTACT_BG_COLOR}; padding: 10px; margin-bottom: 10px; border-radius: 5px;">'
+        f'<h4>{contact_number}. {contact["First Name"]} {contact["Last Name"]}</h4>'
+        f'<p>📍 {contact["Country"]} | ✉️ {contact["Email"]} | 📞 {contact["Phone"]} | '
+        f'🏷️ {contact.get("Title", "—")} | 🏢 {contact.get("Department", "—")} | '
+        f'💡 Use Case: {contact.get("Use Case", "—")}</p>'
+        f'</div>',
+        unsafe_allow_html=True,
     )
     last_action_type = contact.get('Last Action Type Event') or '—'
     last_action_date = contact.get('Last Action Date') or '—'
