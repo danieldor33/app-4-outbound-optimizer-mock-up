@@ -412,6 +412,12 @@ grid_response = AgGrid(
     fit_columns_on_grid_load=True,
 )
 
+# Reset only the session updates and moved contacts
+if st.button("🔄 Reset All Updates"):
+    st.session_state.contact_updates = {}
+    st.session_state.contact_move_to_bottom = []
+    st.experimental_rerun()
+
 selected_rows = grid_response["selected_rows"]
 if hasattr(selected_rows, "to_dict"):
     selected_rows = selected_rows.to_dict(orient="records")
