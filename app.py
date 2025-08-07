@@ -419,10 +419,11 @@ if st.button("🔄 Reset All Updates"):
     st.session_state.contact_updates = {}
     st.session_state.contact_move_to_bottom = []
     st.session_state.reset_trigger = True
+    st.stop()  # Stop execution, Streamlit will rerun on next interaction
 
 if st.session_state.reset_trigger:
     st.session_state.reset_trigger = False
-    st.experimental_rerun()
+    # No explicit rerun here, Streamlit naturally reruns after st.stop()
 
 selected_rows = grid_response["selected_rows"]
 if hasattr(selected_rows, "to_dict"):
