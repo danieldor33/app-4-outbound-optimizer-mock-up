@@ -145,6 +145,7 @@ def load_sample_data():
             "Last Email Submission Date": "2025-08-01",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Marketing Manager",
             "Department": "Marketing",
             "Use Case": "Market intelligence and competitor analysis"
@@ -163,6 +164,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Sales Director",
             "Department": "Sales",
             "Use Case": "Lead generation and sales prospecting"
@@ -181,6 +183,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "2025-07-30",
+            "Last Add To Cadence Date": "",
             "Title": "Product Manager",
             "Department": "Product",
             "Use Case": "Competitive benchmarking for product features"
@@ -200,6 +203,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Business Analyst",
             "Department": "Business Intelligence",
             "Use Case": "Traffic analysis for strategic decisions"
@@ -218,6 +222,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Digital Marketing Specialist",
             "Department": "Marketing",
             "Use Case": "Campaign performance monitoring"
@@ -237,6 +242,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Sales Operations Manager",
             "Department": "Sales",
             "Use Case": "Optimizing sales funnel and lead insights"
@@ -255,6 +261,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "CEO",
             "Department": "Management",
             "Use Case": "High-level market trends and competitor overview"
@@ -274,6 +281,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Marketing Analyst",
             "Department": "Marketing",
             "Use Case": "Analyzing competitor marketing campaigns"
@@ -292,6 +300,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Product Owner",
             "Department": "Product",
             "Use Case": "Market share tracking and opportunity identification"
@@ -311,6 +320,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Data Scientist",
             "Department": "Analytics",
             "Use Case": "Website traffic and user behavior insights"
@@ -329,6 +339,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Business Development Manager",
             "Department": "Sales",
             "Use Case": "Identifying new business opportunities"
@@ -348,6 +359,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Marketing Director",
             "Department": "Marketing",
             "Use Case": "Campaign effectiveness and market reach"
@@ -366,6 +378,7 @@ def load_sample_data():
             "Last Email Submission Date": "",
             "Last Call Date": "",
             "Last Meeting Date": "",
+            "Last Add To Cadence Date": "",
             "Title": "Product Manager",
             "Department": "Product",
             "Use Case": "Competitive product positioning"
