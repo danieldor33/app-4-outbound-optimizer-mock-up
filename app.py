@@ -25,7 +25,7 @@ def load_sample_data():
         },
         {
             "Country": "UK",
-            "Account Name": "Globex Ltd.",
+            "Account Name": "Globex Ltd. t",
             "Parent Company Domain": "globex.com",
             "Website": "www.globex.com",
             "Is Previous Churned Account?": True,
