@@ -285,4 +285,7 @@ if st.session_state.update_request is not None:
     # Safely rerun the app to refresh the UI with updated data
     st.experimental_rerun()
 
-# --- Show info if no account selected (should not happen because we default to
+# --- Show info if no account selected (should not happen because we default to first) ---
+if not selected_rows:
+    st.info("Select an account from the table above to view contacts.")
+
