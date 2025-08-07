@@ -287,6 +287,8 @@ for idx, row in filtered_contacts_df.iterrows():
 if st.session_state.needs_rerun:
     st.session_state.needs_rerun = False  # reset the flag
     st.experimental_rerun()
+    # Exit immediately to avoid code running after rerun triggered
+    st.stop()
 
 # --- 10. If no selection ---
 if not selected_rows:
