@@ -184,7 +184,6 @@ selected_rows = grid_response["selected_rows"]
 if selected_rows and len(selected_rows) > 0:
     selected_account = selected_rows[0]
 else:
-    # If none selected, default to first account in accounts_df
     selected_account = accounts_df.iloc[0].to_dict()
 
 selected_domain = selected_account["Parent Company Domain"]
